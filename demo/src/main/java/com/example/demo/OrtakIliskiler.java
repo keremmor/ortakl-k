@@ -6,34 +6,33 @@ import java.util.stream.Collectors;
 class Kisi {
     String ad;
     String soyad;
-    String asilNumara;
-    String ikincilNumara;
+    String asilTcKimlikNo;
+    String iliskiliTcKimlikNo;
     String iliskiler; // İlişkiler string olarak saklanır
 
-    public Kisi(String ad, String soyad, String asilNumara, String ikincilNumara) {
+    public Kisi(String ad, String soyad, String asilTcKimlikNo, String iliskiliTcKimlikNo) {
         this.ad = ad;
         this.soyad = soyad;
-        this.asilNumara = asilNumara;
-        this.ikincilNumara = ikincilNumara;
+        this.asilTcKimlikNo = asilTcKimlikNo;
+        this.iliskiliTcKimlikNo = iliskiliTcKimlikNo;
         this.iliskiler = "";
     }
 
-    public void iliskiEkle(String ikincilNumara, String iliskiTipi) {
-        iliskiler += ikincilNumara + ":" + iliskiTipi + ";";
+    public void iliskiEkle(String iliskiliTcKimlikNo, String iliskiTipi) {
+        iliskiler += iliskiliTcKimlikNo + ":" + iliskiTipi + ";";
     }
 
-    public Set<String> getIliskilerIkincilNumaralar() {
-        Set<String> numaralar = Arrays.stream(iliskiler.split(";"))
-                .filter(s -> !s.isEmpty())
-                .map(s -> s.split(":")[0])
-                .collect(Collectors.toSet()) ;
-        return numaralar;
-    }
-
-    public String getIliskiTipi(String ikincilNumara) {
+    public Set<String> getIliskiliTcKimlikNolar() {
         return Arrays.stream(iliskiler.split(";"))
                 .filter(s -> !s.isEmpty())
-                .filter(s -> s.startsWith(ikincilNumara + ":"))
+                .map(s -> s.split(":")[0])
+                .collect(Collectors.toSet());
+    }
+
+    public String getIliskiTipi(String iliskiliTcKimlikNo) {
+        return Arrays.stream(iliskiler.split(";"))
+                .filter(s -> !s.isEmpty())
+                .filter(s -> s.startsWith(iliskiliTcKimlikNo + ":"))
                 .map(s -> s.split(":")[1])
                 .findFirst()
                 .orElse(null);
@@ -51,55 +50,55 @@ public class OrtakIliskiler {
 
         // Kişileri tanımlama ve ilişkilerini ekleme
         Kisi kisi1 = new Kisi("Ahmet", "Yılmaz", "100", "200");
-        kisi1.iliskiEkle(kisi201.ikincilNumara, "Arkadaşı");
-        kisi1.iliskiEkle(kisi202.ikincilNumara, "Meslektaşı");
-        kisi1.iliskiEkle(kisi203.ikincilNumara, "Kardeşi"); // Ortak iliskili kişi 1
-        kisi1.iliskiEkle(kisi204.ikincilNumara, "Kuzeni"); // Ortak iliskili kişi 2
+        kisi1.iliskiEkle(kisi201.iliskiliTcKimlikNo, "Arkadaşı");
+        kisi1.iliskiEkle(kisi202.iliskiliTcKimlikNo, "Meslektaşı");
+        kisi1.iliskiEkle(kisi203.iliskiliTcKimlikNo, "Kardeşi"); // Ortak ilişkili kişi 1
+        kisi1.iliskiEkle(kisi204.iliskiliTcKimlikNo, "Kuzeni"); // Ortak ilişkili kişi 2
 
         Kisi kisi2 = new Kisi("Mehmet", "Kaya", "101", "201");
-        kisi2.iliskiEkle(kisi203.ikincilNumara, "Komşusu"); // Ortak iliskili kişi 1
-        kisi2.iliskiEkle(kisi204.ikincilNumara, "Arkadaşı"); // Ortak iliskili kişi 2
-        kisi2.iliskiEkle(kisi205.ikincilNumara, "Amcası");
+        kisi2.iliskiEkle(kisi203.iliskiliTcKimlikNo, "Komşusu"); // Ortak ilişkili kişi 1
+        kisi2.iliskiEkle(kisi204.iliskiliTcKimlikNo, "Arkadaşı"); // Ortak ilişkili kişi 2
+        kisi2.iliskiEkle(kisi205.iliskiliTcKimlikNo, "Amcası");
 
         Kisi kisi3 = new Kisi("Zeynep", "Kara", "102", "302");
-        kisi3.iliskiEkle(kisi203.ikincilNumara, "Tanıdığı"); // Ortak iliskili kişi 1
+        kisi3.iliskiEkle(kisi203.iliskiliTcKimlikNo, "Tanıdığı"); // Ortak ilişkili kişi 1
 
         // Tüm kişileri tek bir listeye eklemek
         List<Kisi> tumKisiler = Arrays.asList(kisi1, kisi2, kisi3, kisi201, kisi202, kisi203, kisi204, kisi205);
 
-        // Ortak ikincil numaraya sahip kişileri bulma
-        Map<String, Set<Kisi>> ikincilNumaralarMap = new HashMap<>();
+        // Ortak iliskiliTcKimlikNo'lara sahip kişileri bulma
+        Map<String, Set<Kisi>> iliskiliTcKimlikNolarMap = new HashMap<>();
 
         // Her kişi için ilişkiler haritasını oluştur
         for (Kisi kisi : tumKisiler) {
-            Set<String> ikincilNumaralar = kisi.getIliskilerIkincilNumaralar();
-            for (String ikincilNumara : ikincilNumaralar) {
-                ikincilNumaralarMap.computeIfAbsent(ikincilNumara, k -> new HashSet<>()).add(kisi);
+            Set<String> iliskiliTcKimlikNolar = kisi.getIliskiliTcKimlikNolar();
+            for (String iliskiliTcKimlikNo : iliskiliTcKimlikNolar) {
+                iliskiliTcKimlikNolarMap.computeIfAbsent(iliskiliTcKimlikNo, k -> new HashSet<>()).add(kisi);
             }
         }
 
-        // Ortak ikincil numaraları bulma
-        Set<String> ortakIkincilNumaralar = ikincilNumaralarMap.entrySet().stream()
+        // Ortak iliskiliTcKimlikNo'ları bulma
+        Set<String> ortakIliskiliTcKimlikNolar = iliskiliTcKimlikNolarMap.entrySet().stream()
                 .filter(entry -> entry.getValue().size() > 1)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
-        if (ortakIkincilNumaralar.isEmpty()) {
-            System.out.println("Ortak ikincil numaraya sahip ilişki bulunamadı.");
+        if (ortakIliskiliTcKimlikNolar.isEmpty()) {
+            System.out.println("Ortak iliskiliTcKimlikNo'ya sahip ilişki bulunamadı.");
         } else {
-            System.out.println("Ortak ikincil numaraya sahip ilişkili kişiler:");
-            for (String ikincilNumara : ortakIkincilNumaralar) {
-                System.out.println("İkincil Numarası: " + ikincilNumara);
-                Set<Kisi> ortakKisiler = ikincilNumaralarMap.get(ikincilNumara);
+            System.out.println("Ortak iliskiliTcKimlikNo'ya sahip ilişkili kişiler:");
+            for (String iliskiliTcKimlikNo : ortakIliskiliTcKimlikNolar) {
+                System.out.println("İliskili TcKimlik No: " + iliskiliTcKimlikNo);
+                Set<Kisi> ortakKisiler = iliskiliTcKimlikNolarMap.get(iliskiliTcKimlikNo);
 
                 Map<String, List<String>> kisiIliskileri = new HashMap<>();
 
                 for (Kisi kisi : ortakKisiler) {
-                    for (Kisi kisiDiğer : tumKisiler) {
-                        if (kisiDiğer.getIliskilerIkincilNumaralar().contains(ikincilNumara)) {
-                            String iliskiTipi = kisiDiğer.getIliskiTipi(ikincilNumara);
+                    for (Kisi kisiDiger : tumKisiler) {
+                        if (kisiDiger.getIliskiliTcKimlikNolar().contains(iliskiliTcKimlikNo)) {
+                            String iliskiTipi = kisiDiger.getIliskiTipi(iliskiliTcKimlikNo);
                             kisiIliskileri.computeIfAbsent(kisi.ad + " " + kisi.soyad, k -> new ArrayList<>())
-                                    .add(kisiDiğer.asilNumara + " numaralı kişinin " + iliskiTipi);
+                                    .add(kisiDiger.asilTcKimlikNo + " numaralı kişinin " + iliskiTipi);
                         }
                     }
                 }
@@ -113,4 +112,3 @@ public class OrtakIliskiler {
         }
     }
 }
-
